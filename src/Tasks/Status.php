@@ -1,7 +1,9 @@
 <?php
 
+namespace TaskForce\Tasks;
 
-class Task {
+
+class Status {
 	const STATUS_NEW         = 'new';
 	const STATUS_CANCELLED   = 'cancelled';
 	const STATUS_IN_PROGRESS = 'in_progress';
