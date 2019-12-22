@@ -81,15 +81,13 @@ class Status {
 	 * @throws LogicException
 	 */
 	public function getAvailableActionsForStatus(string $status): array {
-		assert(in_array($status, array_keys(self::STATUS_TO_ACTIONS_MAP)));
-		
 		$actionsOfStatus = self::STATUS_TO_ACTIONS_MAP[$status];
 		$actions         = [];
 		
 		if (! empty($actionsOfStatus)) {
 			foreach ($actionsOfStatus as $actionClassName) {
 				if (! class_exists($actionClassName)) {
-					throw new LogicException('Экшн с таким классом не найден');
+					throw new LogicException('Action class not found');
 				}
 				
 				$actions[] = new $actionClassName();

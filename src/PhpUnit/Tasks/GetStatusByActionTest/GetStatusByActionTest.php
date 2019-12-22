@@ -1,12 +1,12 @@
 <?php
 
-namespace PhpUnit\Tasks;
+namespace PhpUnit\Tasks\GetStatusByActionTest;
 
 use PHPUnit\Framework\TestCase;
 use TaskForce\Tasks\Status;
 use \LogicException;
 
-class StatusTest extends TestCase {
+class GetStatusByActionTest extends TestCase {
 	
 	/** @var Status */
 	protected $status;
