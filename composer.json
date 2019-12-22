@@ -1,0 +1,16 @@
+{
+    "name": "shv-sergey70/task-force",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Sergey Shershnev",
+            "email": "shv.sergey70@gmail.com"
+        }
+    ],
+		"autoload": {
+			"psr-4": {
+				"TaskForce\\": "src/"
+			}
+		},
+    "require": {}
+}
