@@ -29,8 +29,10 @@ CREATE TABLE IF NOT EXISTS `user_fail_counters` (
  COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `cities` (
-	`id`   INT(11)      UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`name` VARCHAR(255)          NOT NULL                UNIQUE
+	`id`        INT(11)      UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`name`      VARCHAR(255)          NOT NULL                UNIQUE,
+	`latitude`  FLOAT        UNSIGNED NOT NULL,
+	`longitude` FLOAT        UNSIGNED NOT NULL
 ) ENGINE = InnoDB
  DEFAULT CHARSET = utf8mb4
  COLLATE = utf8mb4_unicode_ci;
@@ -112,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `chats` (
 CREATE TABLE IF NOT EXISTS `categories` (
 	`id`         INT(11)      UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name`       VARCHAR(255)          NOT NULL,
+	`icon`       VARCHAR(255)          NOT NULL,
 	`created_at` DATETIME              NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
 	DEFAULT CHARSET = utf8mb4
