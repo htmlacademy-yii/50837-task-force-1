@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [сергей бутенко](https://up.htmlacademy.ru/yii/1/user/50837).
-* Наставник: `Неизвестно`.
+* Наставник: [Игорь Деяшкин](https://htmlacademy.ru/profile/id1098723).
 
 ---
 
