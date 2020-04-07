@@ -1,6 +1,6 @@
 <?php
 
-class MyClass
+class TaskStrategy
 {
     // статусы
     const STATUS_NEW = 'new';
@@ -48,11 +48,21 @@ class MyClass
     //id заказчика и исполнителя
     private $idCustomer;
     private $idExecutor;
+    private $currentStatus;
 
-    function __construct(string $idCustomer, string $idExecutor)
+    function __construct(string $idCustomer, string $idExecutor, string $currentStatus)
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
+        $this->currentStatus = $currentStatus;
+    }
+
+    public function setCurrentStatus(string $currentStatus) {
+        $this->currentStatus = $currentStatus;
+    }
+
+    public function getCurrentStatus() {
+        return $this->currentStatus;
     }
 
     public function getIdCustomer()
@@ -67,22 +77,19 @@ class MyClass
 
     public function getAvailableActions(string $status): array
     {
-        foreach ($this->statusesWithActions as $key => $value) {
-            if ($key == $status)
-                return $value;
+        if(array_key_exists($status, $this->statusesWithActions)) {
+            return $this->statusesWithActions[$status];
         }
+        return [];
     }
 
     public function getNextStatus(string $action): string
     {
 
-        foreach ($this->actionsWithStatuses as $key => $value) {
-            if ($key == $action) {
-                return $value;
-            }
+        if(array_key_exists($action, $this->actionsWithStatuses)) {
+            return $this->actionsWithStatuses[$action];
         }
         return '';
     }
 }
-
 
