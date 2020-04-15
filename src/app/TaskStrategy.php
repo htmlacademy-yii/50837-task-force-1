@@ -1,5 +1,7 @@
 <?php
 
+namespace Sergei404;
+
 class TaskStrategy
 {
     // статусы
@@ -15,7 +17,7 @@ class TaskStrategy
     const ACTION_PERFORM = 'perform';
     const ACTION_REFUSE = 'refuse';
 
-    const STATUSES = [
+    private static $statuses = [
         self::STATUS_NEW => 'Новый',
         self::STATUS_CANCELED => 'Отменено',
         self::STATUS_IN_WORK => 'В работе',
@@ -23,14 +25,14 @@ class TaskStrategy
         self::STATUS_FAILED => 'Провалено',
     ];
 
-    const ACTIONS = [
+    private static $actions = [
         self::ACTION_CANSEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
         self::ACTION_PERFORM => 'Выполнить',
         self::ACTION_REFUSE => 'Отказаться'
     ];
 
-    public $statusesWithActions = [
+    private static $statusesWithActions = [
         self::STATUS_NEW => [self::ACTION_CANSEL, self::ACTION_ANSWER],
         self::STATUS_CANCELED => [],
         self::STATUS_IN_WORK => [self::ACTION_PERFORM, self::ACTION_REFUSE],
@@ -38,7 +40,7 @@ class TaskStrategy
         self::STATUS_FAILED => []
     ];
 
-    public $actionsWithStatuses = [
+    private static $actionsWithStatuses = [
         self::ACTION_CANSEL => self::STATUS_CANCELED,
         self::ACTION_ANSWER => self::STATUS_IN_WORK,
         self::ACTION_PERFORM => self::STATUS_PERFORMED,
@@ -54,12 +56,15 @@ class TaskStrategy
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
-        $this->currentStatus = $currentStatus;
+        if(array_key_exists($currentStatus, self::$statusesWithActions)) {
+            $this->currentStatus = $currentStatus;
+        }
+        else {
+            echo "значение $currentStatus некорректно";
+        }
+
     }
 
-    public function setCurrentStatus(string $currentStatus) {
-        $this->currentStatus = $currentStatus;
-    }
 
     public function getCurrentStatus() {
         return $this->currentStatus;
@@ -75,19 +80,18 @@ class TaskStrategy
         return $this->idExecutor;
     }
 
-    public function getAvailableActions(string $status): array
+    public function getAvailableActions(): array
     {
-        if(array_key_exists($status, $this->statusesWithActions)) {
-            return $this->statusesWithActions[$status];
-        }
-        return [];
+
+        return self::$statusesWithActions[$this->currentStatus];
+
     }
 
     public function getNextStatus(string $action): string
     {
 
-        if(array_key_exists($action, $this->actionsWithStatuses)) {
-            return $this->actionsWithStatuses[$action];
+        if(array_key_exists($action, self::$actionsWithStatuses)) {
+            return self::$actionsWithStatuses[$action];
         }
         return '';
     }
