@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace Sergei404;
 
 class TaskStrategy
 {
@@ -56,7 +56,13 @@ class TaskStrategy
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
-        $this->currentStatus = $currentStatus;
+        if(array_key_exists($currentStatus, self::$statusesWithActions)) {
+            $this->currentStatus = $currentStatus;
+        }
+        else {
+            echo "значение $currentStatus некорректно";
+        }
+
     }
 
 

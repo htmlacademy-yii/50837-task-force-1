@@ -1,7 +1,7 @@
 {
   "autoload": {
     "psr-4": {
-      "app\\": "src/app"
+      "Sergei404\\": "src/app"
     }
   }
 }
