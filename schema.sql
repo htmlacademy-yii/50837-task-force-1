@@ -1,16 +1,18 @@
+DROP DATABASE forse;
+
 CREATE DATABASE forse CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE forse;
 
 CREATE TABLE users (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR (70) NOT NULL,
-  email VARCHAR (129) UNIQUE NOT NULL,
-  city VARCHAR (129) NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  name VARCHAR (256) NOT NULL,
+  email VARCHAR (256) UNIQUE NOT NULL,
+  city_id INT NOT NULL UNSIGNED,
   birthday DATETIME,
-  discription VARCHAR (256),
+  discription TEXT,
   pass VARCHAR (256) NOT NULL,
-  phone INT UNSIGNED,
+  phone VARCHAR (70) UNIQUE,
   photo VARCHAR (256),
   skype VARCHAR (129) UNIQUE,
   telegram VARCHAR (129) UNIQUE,
@@ -18,59 +20,76 @@ CREATE TABLE users (
   notify_of_actions BOOLEAN,
   notify_of_responses BOOLEAN,
   show_contacts BOOLEAN,
-  not_show_profile BOOLEAN);
+  show_profile BOOLEAN
+  FOREIGN KEY (city_id) REFERENCES towns (id));
 
 CREATE TABLE job_photos (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  user_id INT,
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  user_id INT UNSIGNED,
   photo VARCHAR (256),
   FOREIGN KEY (user_id) REFERENCES users (id));
 
 CREATE TABLE categories (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
-  title VARCHAR (128));
+  title VARCHAR (256),
+  translation VARCHAR (256),
+  icon VARCHAR (256));
 
-CREATE TABLE users_of_categories (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  user_id INT,
-  categories_id INT,
+CREATE TABLE users_categories (
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  user_id INT UNSIGNED,
+  category_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (categories_id) REFERENCES categories (id));
 
 CREATE TABLE tasks (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  user_id INT,
-  iNeed VARCHAR (129) NOT NULL,
-  job_details VARCHAR (512),
-  categories_id INT,
-  adress VARCHAR (256),
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  user_id INT UNSIGNED,
+  title VARCHAR (129) NOT NULL,
+  details TEXT,
+  category_id INT UNSIGNED,
+  adds_id INT UNSIGNED,
   budget INT,
   date_start DATETIME,
-  date_end DATETIME);
+  date_end DATETIME
+  FOREIGN KEY (adds_id) REFERENCES towns (id),
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (category_id) REFERENCES categories (id));
 
 CREATE TABLE files (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  task_id INT,
-  document VARCHAR (256),
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  task_id INT UNSIGNED,
+  path VARCHAR (256),
   FOREIGN KEY (task_id) REFERENCES tasks (id));
 
 CREATE TABLE reviews (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  author_review_id INT,
-  user_id INT,
-  review VARCHAR (512),
-  rating INT);
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  author_id INT UNSIGNED,
+  reviewed_user_id INT UNSIGNED,
+  content TEXT,
+  rating INT
+  FOREIGN KEY (author_id) REFERENCES users (id),
+  FOREIGN KEY (reviewed_user_id) REFERENCES categories (id));
 
 CREATE TABLE responds (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  task_id INT,
-  author_id INT,
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  task_id INT UNSIGNED,
+  author_id INT UNSIGNED,
   report VARCHAR (512),
   price INT,
-  data_respond DATETIME);
+  date DATETIME
+  FOREIGN KEY (author_id) REFERENCES users (id),
+  FOREIGN KEY (task_id) REFERENCES tasks (id));
 
 CREATE TABLE messages (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
-  author_id INT,
-  user_id INt,
-  report VARCHAR (512));
+  author_id INT UNSIGNED,
+  text VARCHAR (512)
+  FOREIGN KEY (author_id) REFERENCES users (id));
+
+CREATE TABLE towns (
+  id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
+  title VARCHAR (256),
+  width VARCHAR (256),
+  length VARCHAR (256)
+);
