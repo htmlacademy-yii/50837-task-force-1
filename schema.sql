@@ -8,9 +8,9 @@ CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
   name VARCHAR (256) NOT NULL,
   email VARCHAR (256) UNIQUE NOT NULL,
-  city_id INT NOT NULL UNSIGNED,
+  town_id INT NOT NULL UNSIGNED,
   birthday DATETIME,
-  discription TEXT,
+  description TEXT,
   pass VARCHAR (256) NOT NULL,
   phone VARCHAR (70) UNIQUE,
   photo VARCHAR (256),
@@ -21,7 +21,7 @@ CREATE TABLE users (
   notify_of_responses BOOLEAN,
   show_contacts BOOLEAN,
   show_profile BOOLEAN
-  FOREIGN KEY (city_id) REFERENCES towns (id));
+  FOREIGN KEY (town_id) REFERENCES towns (id));
 
 CREATE TABLE job_photos (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
@@ -32,7 +32,6 @@ CREATE TABLE job_photos (
 CREATE TABLE categories (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
   title VARCHAR (256),
-  translation VARCHAR (256),
   icon VARCHAR (256));
 
 CREATE TABLE users_categories (
@@ -48,11 +47,11 @@ CREATE TABLE tasks (
   title VARCHAR (129) NOT NULL,
   details TEXT,
   category_id INT UNSIGNED,
-  adds_id INT UNSIGNED,
+  town_id INT UNSIGNED,
   budget INT,
   date_start DATETIME,
   date_end DATETIME
-  FOREIGN KEY (adds_id) REFERENCES towns (id),
+  FOREIGN KEY (town_id) REFERENCES towns (id),
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (category_id) REFERENCES categories (id));
 
@@ -90,6 +89,6 @@ CREATE TABLE messages (
 CREATE TABLE towns (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
   title VARCHAR (256),
-  width VARCHAR (256),
-  length VARCHAR (256)
+  breadth VARCHAR (256),
+  longitude VARCHAR (256)
 );
