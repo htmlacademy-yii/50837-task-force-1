@@ -1,8 +1,8 @@
-DROP DATABASE forse;
+DROP DATABASE force;
 
-CREATE DATABASE forse CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE force CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-USE forse;
+USE force;
 
 CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
@@ -89,6 +89,6 @@ CREATE TABLE messages (
 CREATE TABLE towns (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
   title VARCHAR (256),
-  breadth VARCHAR (256),
-  longitude VARCHAR (256)
+  latitude  FLOAT,
+  longitude  FLOAT
 );
