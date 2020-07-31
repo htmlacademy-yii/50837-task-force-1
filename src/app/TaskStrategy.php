@@ -2,6 +2,9 @@
 
 namespace Sergei404;
 
+use Sergei404\Actions\AnswerAction;
+use Sergei404\Actions\CancelAction;
+
 class TaskStrategy
 {
     // статусы
@@ -12,7 +15,8 @@ class TaskStrategy
     const STATUS_FAILED = 'failed';
 
     //действия
-    const ACTION_CANSEL = 'cansel';
+    // const ACTION_CANSEL = 'cancel';
+    const ACTION_CANSEL = 'Sergei404\action\CancelAction';
     const ACTION_ANSWER = 'answer';
     const ACTION_PERFORM = 'perform';
     const ACTION_REFUSE = 'refuse';
@@ -56,17 +60,16 @@ class TaskStrategy
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
-        if(array_key_exists($currentStatus, self::$statusesWithActions)) {
+        if (array_key_exists($currentStatus, self::$statusesWithActions)) {
             $this->currentStatus = $currentStatus;
-        }
-        else {
+        } else {
             echo "значение $currentStatus некорректно";
         }
-
     }
 
 
-    public function getCurrentStatus() {
+    public function getCurrentStatus()
+    {
         return $this->currentStatus;
     }
 
@@ -80,20 +83,38 @@ class TaskStrategy
         return $this->idExecutor;
     }
 
+    /**
+     * Возвращает список доступных действий.
+     *
+     * @return array Массив действий
+     */
     public function getAvailableActions(): array
     {
+        $actions = self::$statusesWithActions[$this->currentStatus];
 
-        return self::$statusesWithActions[$this->currentStatus];
+        $actionObjectList = [];
+        foreach ($actions as $action) {
+            $name = ucfirst($action) . 'Action';
+            $name = "Sergei404\Actions\AnswerAction";
+            $actionObjectList[] = new $name();
+        }
 
+        return $actionObjectList;
     }
 
+    /**
+     * Возвращает статус
+     *
+     * @param string $action
+     *
+     * @return string
+     */
     public function getNextStatus(string $action): string
     {
 
-        if(array_key_exists($action, self::$actionsWithStatuses)) {
+        if (array_key_exists($action, self::$actionsWithStatuses)) {
             return self::$actionsWithStatuses[$action];
         }
         return '';
     }
 }
-

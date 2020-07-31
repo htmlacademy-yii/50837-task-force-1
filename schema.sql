@@ -43,7 +43,8 @@ CREATE TABLE users_categories (
 
 CREATE TABLE tasks (
   id INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
-  user_id INT UNSIGNED,
+  author_id INT UNSIGNED NOT NULL,
+  performer_id INT UNSIGNED DEFAULT NULL,
   title VARCHAR (129) NOT NULL,
   details TEXT,
   category_id INT UNSIGNED,
@@ -52,7 +53,8 @@ CREATE TABLE tasks (
   date_start DATETIME,
   date_end DATETIME
   FOREIGN KEY (town_id) REFERENCES towns (id),
-  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (author_id) REFERENCES users (id),
+  FOREIGN KEY (performer_id) REFERENCES users (id),
   FOREIGN KEY (category_id) REFERENCES categories (id));
 
 CREATE TABLE files (
