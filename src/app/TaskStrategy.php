@@ -95,7 +95,6 @@ class TaskStrategy
         $actionObjectList = [];
         foreach ($actions as $action) {
             $name = ucfirst($action) . 'Action';
-            $name = "Sergei404\Actions\AnswerAction";
             $actionObjectList[] = new $name();
         }
 
