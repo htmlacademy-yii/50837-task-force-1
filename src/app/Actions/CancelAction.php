@@ -1,19 +1,19 @@
 <?php
 
 namespace Sergei404\Actions;
+
 /**
- * Класс для действия "отказаться от задачи"
+ * Класс для действия "отменить задачу"
  */
-class RefuseAction extends Action
-{
-    /**
+class CancelAction extends Action {
+     /**
      * {@inheritdoc}
      *
      * @return string
      */
     public function getName(): string
     {
-        return 'Отказаться';
+        return 'Отменить';
     }
 
     /**
@@ -23,11 +23,12 @@ class RefuseAction extends Action
      */
     public function getCode(): string
     {
-        return 'refuse';
+        return 'cancel';
     }
 
     /**
-     * Отказаться может только авторизованный пользовтель, ноторый  является исполнителем.
+     * отменить может только авторизованный пользовтель,
+     * который является исполнителем и не является автором
 
      * @param integer $userId Текущий пользователь
      * @param integer $authorId Автор задачи
@@ -37,7 +38,7 @@ class RefuseAction extends Action
      */
     public function isAvailable(int $userId, int $authorId, ?int $performerId): bool
     {
-        if($userId == $performerId) {
+        if($userId != $authorId && $performerId == $userId) {
             return true;
         }
         return false;

@@ -4,6 +4,8 @@ namespace Sergei404;
 
 use Sergei404\Actions\AnswerAction;
 use Sergei404\Actions\CancelAction;
+use Sergei404\Actions\PerformAction;
+use Sergei404\Actions\RefuseAction;
 
 class TaskStrategy
 {
@@ -15,11 +17,14 @@ class TaskStrategy
     const STATUS_FAILED = 'failed';
 
     //действия
-    // const ACTION_CANSEL = 'cancel';
-    const ACTION_CANSEL = 'Sergei404\action\CancelAction';
-    const ACTION_ANSWER = 'answer';
-    const ACTION_PERFORM = 'perform';
-    const ACTION_REFUSE = 'refuse';
+    // const ACTION_CANCEL = "\Sergei404\Actions\CancelAction";
+    // const ACTION_ANSWER = "\Sergei404\Actions\AnswerAction";
+    // const ACTION_PERFORM = "\Sergei404\Actions\PerformAction";
+    // const ACTION_REFUSE = "\Sergei404\Actions\RefuseAction";
+    const ACTION_CANCEL = "cancel";
+    const ACTION_ANSWER = "answer";
+    const ACTION_PERFORM = "perform";
+    const ACTION_REFUSE = "refuse";
 
     private static $statuses = [
         self::STATUS_NEW => 'Новый',
@@ -30,14 +35,14 @@ class TaskStrategy
     ];
 
     private static $actions = [
-        self::ACTION_CANSEL => 'Отменить',
+        self::ACTION_CANCEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
         self::ACTION_PERFORM => 'Выполнить',
         self::ACTION_REFUSE => 'Отказаться'
     ];
 
     private static $statusesWithActions = [
-        self::STATUS_NEW => [self::ACTION_CANSEL, self::ACTION_ANSWER],
+        self::STATUS_NEW => [self::ACTION_ANSWER, self::ACTION_CANCEL],
         self::STATUS_CANCELED => [],
         self::STATUS_IN_WORK => [self::ACTION_PERFORM, self::ACTION_REFUSE],
         self::STATUS_PERFORMED => [],
@@ -45,7 +50,7 @@ class TaskStrategy
     ];
 
     private static $actionsWithStatuses = [
-        self::ACTION_CANSEL => self::STATUS_CANCELED,
+        self::ACTION_CANCEL => self::STATUS_CANCELED,
         self::ACTION_ANSWER => self::STATUS_IN_WORK,
         self::ACTION_PERFORM => self::STATUS_PERFORMED,
         self::ACTION_REFUSE => self::STATUS_FAILED
@@ -56,7 +61,7 @@ class TaskStrategy
     private $idExecutor;
     private $currentStatus;
 
-    function __construct(string $idCustomer, string $idExecutor, string $currentStatus)
+    function __construct(int $idCustomer, int $idExecutor, string $currentStatus)
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
@@ -67,18 +72,24 @@ class TaskStrategy
         }
     }
 
-
-    public function getCurrentStatus()
+    /**
+     * возвращает текущий статус
+     */
+    public function getCurrentStatus(): string
     {
         return $this->currentStatus;
     }
-
-    public function getIdCustomer()
+    /**
+     * вщзвращает id заказчика
+     */
+    public function getIdCustomer(): int
     {
         return $this->idCustomer;
     }
-
-    public function getIdExecutor()
+    /**
+     * вщзвращает id исполнителя
+     */
+    public function getIdExecutor(): int
     {
         return $this->idExecutor;
     }
@@ -94,7 +105,7 @@ class TaskStrategy
 
         $actionObjectList = [];
         foreach ($actions as $action) {
-            $name = ucfirst($action) . 'Action';
+            $name = 'Sergei404\Actions\\' . lcfirst($action) . 'Action';
             $actionObjectList[] = new $name();
         }
 
