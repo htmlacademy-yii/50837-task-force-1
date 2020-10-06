@@ -10,10 +10,6 @@ use Sergei404\Actions\RefuseAction;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 0);
-assert_options(ASSERT_QUIET_EVAL, 1);
-
 $answer = new AnswerAction();
 $isAvailableValue = $answer->isAvailable(11, 14, 14);
 assert('true == $isAvailableValue', 'Тест провален');
