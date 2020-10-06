@@ -28,19 +28,15 @@ class CancelAction extends Action {
 
     /**
      * отменить может только авторизованный пользовтель,
-     * который является исполнителем и не является автором
-
+     * который является автором
      * @param integer $userId Текущий пользователь
      * @param integer $authorId Автор задачи
      * @param integer|null $performerId Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $authorId, ?int $performerId): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
     {
-        if($userId != $authorId && $performerId == $userId) {
-            return true;
-        }
-        return false;
+        return ($userId == $idCustomer);
     }
 }

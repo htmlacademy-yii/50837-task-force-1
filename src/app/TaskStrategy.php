@@ -4,7 +4,7 @@ namespace Sergei404;
 
 use Sergei404\Actions\AnswerAction;
 use Sergei404\Actions\CancelAction;
-use Sergei404\Actions\PerformAction;
+use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
 
 class TaskStrategy
@@ -13,46 +13,42 @@ class TaskStrategy
     const STATUS_NEW = 'new';
     const STATUS_CANCELED = 'canceled';
     const STATUS_IN_WORK = 'in work';
-    const STATUS_PERFORMED = 'performed';
+    const STATUS_ACCEPTED = 'performed';
     const STATUS_FAILED = 'failed';
 
     //действия
-    // const ACTION_CANCEL = "\Sergei404\Actions\CancelAction";
-    // const ACTION_ANSWER = "\Sergei404\Actions\AnswerAction";
-    // const ACTION_PERFORM = "\Sergei404\Actions\PerformAction";
-    // const ACTION_REFUSE = "\Sergei404\Actions\RefuseAction";
     const ACTION_CANCEL = "cancel";
     const ACTION_ANSWER = "answer";
-    const ACTION_PERFORM = "perform";
+    const ACTION_ACCEPT = "accept";
     const ACTION_REFUSE = "refuse";
 
     private static $statuses = [
         self::STATUS_NEW => 'Новый',
         self::STATUS_CANCELED => 'Отменено',
         self::STATUS_IN_WORK => 'В работе',
-        self::STATUS_PERFORMED => 'Выполнено',
+        self::STATUS_ACCEPTED => 'Принято',
         self::STATUS_FAILED => 'Провалено',
     ];
 
     private static $actions = [
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
-        self::ACTION_PERFORM => 'Выполнить',
+        self::ACTION_ACCEPT => 'Принять',
         self::ACTION_REFUSE => 'Отказаться'
     ];
 
     private static $statusesWithActions = [
         self::STATUS_NEW => [self::ACTION_ANSWER, self::ACTION_CANCEL],
         self::STATUS_CANCELED => [],
-        self::STATUS_IN_WORK => [self::ACTION_PERFORM, self::ACTION_REFUSE],
-        self::STATUS_PERFORMED => [],
+        self::STATUS_IN_WORK => [self::ACTION_ACCEPT, self::ACTION_REFUSE],
+        self::STATUS_ACCEPTED => [],
         self::STATUS_FAILED => []
     ];
 
     private static $actionsWithStatuses = [
         self::ACTION_CANCEL => self::STATUS_CANCELED,
         self::ACTION_ANSWER => self::STATUS_IN_WORK,
-        self::ACTION_PERFORM => self::STATUS_PERFORMED,
+        self::ACTION_ACCEPT => self::STATUS_ACCEPTED,
         self::ACTION_REFUSE => self::STATUS_FAILED
     ];
 
@@ -80,7 +76,7 @@ class TaskStrategy
         return $this->currentStatus;
     }
     /**
-     * вщзвращает id заказчика
+     * возвращает id заказчика
      */
     public function getIdCustomer(): int
     {

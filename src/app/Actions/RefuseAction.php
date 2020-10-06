@@ -1,6 +1,7 @@
 <?php
 
 namespace Sergei404\Actions;
+
 /**
  * Класс для действия "отказаться от задачи"
  */
@@ -27,19 +28,15 @@ class RefuseAction extends Action
     }
 
     /**
-     * Отказаться может только авторизованный пользовтель, ноторый  является исполнителем.
-
+     * Отказаться может только авторизованный пользовтель, который является исполнителем.
      * @param integer $userId Текущий пользователь
      * @param integer $authorId Автор задачи
      * @param integer|null $performerId Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $authorId, ?int $performerId): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
     {
-        if($userId == $performerId) {
-            return true;
-        }
-        return false;
+        return($userId == $idExecutor);
     }
 }

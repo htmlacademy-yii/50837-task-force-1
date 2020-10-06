@@ -5,7 +5,7 @@ namespace Sergei404\Actions;
 /**
  * Класс для действия "выполнить задачу"
  */
-class PerformAction extends Action
+class AcceptAction extends Action
 {
     /**
      * {@inheritdoc}
@@ -28,19 +28,15 @@ class PerformAction extends Action
     }
 
     /**
-     * выполнить может только авторизованный пользовтель, ноторый не является ни автором.
-
+     * выполнить может только авторизованный пользовтель, который является автором
      * @param integer $userId Текущий пользователь
      * @param integer $authorId Автор задачи
      * @param integer|null $performerId Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $authorId, ?int $performerId): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
     {
-        if($userId != $authorId) {
-            return true;
-        }
-        return false;
+        return ($userId == $idCustomer && $userId != $idExecutor);
     }
 }

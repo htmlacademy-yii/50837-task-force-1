@@ -30,23 +30,15 @@ class AnswerAction extends Action
     /**
      * откликнуться может только авторизованный пользовтель, ноторый не является ни автором, ни исполнителем данной
      * задачи.
-     * 
+     *
      * @param integer $userId Текущий пользователь
-     * @param integer $authorId Автор задачи
-     * @param integer|null $performerId Исполнитель
+     * @param integer $$idCustomer Автор задачи
+     * @param integer|null $idExecutor Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $authorId, ?int $performerId): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
     {
-        // if($userId != $authorId && $performerId != $userId) {
-        //     return true;
-        // }
-        // return false;
-
-        $isPerformer = ($performerId === $userId);
-        // $isPerformer = ($performerId === $userId);
-
-        return ($userId != $authorId && !$isPerformer);
+        return ($userId != $idCustomer && $idExecutor != $userId);
     }
 }
