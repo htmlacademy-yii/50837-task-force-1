@@ -7,63 +7,81 @@ use Sergei404\Actions\CancelAction;
 use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
 
+ini_set('assert.exception', 1);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$answer = new AnswerAction();
-$isAvailableValue = $answer->isAvailable(11, 14, 14);
-assert('true == $isAvailableValue', 'Тест провален');
+$testCases = [
+    [new AnswerAction(), 11, 14, 14, true, 'Проверка на то, что не автор, не исполнитель, не могут откликнуться на задачу'],
+    [new AnswerAction(), 14, 14, 14, false, 'Проверка на то, что автор задачи не может откликнуться на задачу'],
+    [new CancelAction(), 14, 14, 14, true, 'Проверка на то, данный пользователь является автором задачи'],
+    [new AcceptAction(), 14, 14, 16, true, 'Проверка на то, пользовтель, который является автором задачи может выполнить действие'],
+    [new RefuseAction(), 16, 14, 16, true, 'Проверка на то, что исполнитель может отказаться от задачи'],
+];
 
-$cancel = new CancelAction();
-$isCancelAvailableValue = $cancel->isAvailable(14, 14, 15);
-assert('true == $isCancelAvailableValue', 'Тест провален');
+function testCaseActions($actionClass, $id1, $id2, $id3, $expected, $message)
+{
+    $action = new $actionClass();
+    $isAvailable = $action->isAvailable($id1, $id2, $id3);
 
-$accept = new AcceptAction();
-$isAcceptAvailableValue = $accept->isAvailable(14, 14, 13);
-assert('true == $isAcceptAvailableValue', 'Тест провален');
+    try {
+        assert($isAvailable === $expected, $message);
+    } catch (\AssertionError $th) {
+        echo ("Test failed: {$th->getMessage()}");
+    }
+}
 
-$refuse = new RefuseAction();
-$isRefuseAvailableValue = $refuse->isAvailable(11, 14, 13);
-assert('true == $isCancelAvailableValue', 'Тест провален');
+foreach ($testCases as $testCase) {
+    testCaseActions(...$testCase);
+}
 
-echo'Тесты пройдены';
+// =======================================================================================================
 
-$task = new TaskStrategy(12, 23, 'new');
-echo '<br>';
-var_dump($task->getAvailableActions());
-echo '<br>';
-echo $task->getCurrentStatus();
-echo '<br>';
-echo $task->getIdCustomer();
-echo '<br>';
-echo $task->getIdExecutor();
-echo '<br>';
-echo $task->getNextStatus('cancel');
+$expected = [
+    [['Sergei404\Actions\AnswerAction'], 22, 2, 4, 'new', 'Задача в статусе new, откликнутся на задачу может user который не является ни автором, ни исполнителем данной задачи'],
+    [['Sergei404\Actions\CancelAction'], 21, 2, 21, 'new', 'Задача в статусе new, автор задачи может ее отменить'],
+    [['Sergei404\Actions\RefuseAction'], 2, 21, 21, 'in work', 'Задача в статусе in work, исполнитель может отказаться от задания'],
+    [['Sergei404\Actions\AcceptAction', 'Sergei404\Actions\RejectAction'], 2, 21, 2, 'in work', 'Задача в статусе in work, автор задачи может принять задачу или отклонить ее'],
+    [[], 2, 11, 11, 'performed', 'Задача в статусе performed, роль пользователя исполнитель - нет доступных действий'],
+    [[], 2, 2, 11, 'performed', 'Задача в статусе performed, роль пользователя автор - нет доступных действий'],
+];
 
-echo '<br>';
 
-$task2 = new TaskStrategy(12, 23, 'canceled');
-echo '<br>';
-var_dump($task2->getAvailableActions());
-echo '<br>';
-echo $task2->getCurrentStatus();
-echo '<br>';
-echo $task2->getIdCustomer();
-echo '<br>';
-echo $task2->getIdExecutor();
-echo '<br>';
-echo $task2->getNextStatus('answer');
 
-echo '<br>';
+function testAvailableActions($expect, $idCustomer, $idExecutor, $userId,  $status, $message)
+{
+    $taskStrategy = new TaskStrategy($idCustomer, $idExecutor, $status);
+    $availableActions = $taskStrategy->getAvailableActions($userId);
 
-$task3 = new TaskStrategy(12, 23, 'in work');
-echo '<br>';
-var_dump($task3->getAvailableActions());
-echo '<br>';
-echo $task3->getCurrentStatus();
-echo '<br>';
-echo $task3->getIdCustomer();
-echo '<br>';
-echo $task3->getIdExecutor();
-echo '<br>';
-echo $task3->getNextStatus('answer');
+    try {
+        assert(isArraysEqual($availableActions, $expect), $message);
+    } catch (\AssertionError $th) {
+        echo ("Test failed: {$th->getMessage()} \n");
+    }
+}
+
+
+foreach ($expected as $expect) {
+    testAvailableActions(...$expect);
+}
+
+function convertObjectToString(array $actual): array
+{
+    $stringValue = [];
+    if(count($actual)) {
+        foreach($actual as $value) {
+            $stringValue[] = get_class($value);
+        }
+    }
+    return $stringValue;
+}
+
+
+function isArraysEqual(array $actual, array $expected): bool
+{
+    if (convertObjectToString($actual) !== $expected) {
+        return false;
+    }
+    return true;
+}
+

@@ -13,7 +13,7 @@ class TaskStrategy
     const STATUS_NEW = 'new';
     const STATUS_CANCELED = 'canceled';
     const STATUS_IN_WORK = 'in work';
-    const STATUS_ACCEPTED = 'performed';
+    const STATUS_PERFORMED = 'performed';
     const STATUS_FAILED = 'failed';
 
     //действия
@@ -21,12 +21,13 @@ class TaskStrategy
     const ACTION_ANSWER = "answer";
     const ACTION_ACCEPT = "accept";
     const ACTION_REFUSE = "refuse";
+    const ACTION_REJECT = "reject";
 
     private static $statuses = [
         self::STATUS_NEW => 'Новый',
         self::STATUS_CANCELED => 'Отменено',
         self::STATUS_IN_WORK => 'В работе',
-        self::STATUS_ACCEPTED => 'Принято',
+        self::STATUS_PERFORMED => 'Принято',
         self::STATUS_FAILED => 'Провалено',
     ];
 
@@ -34,22 +35,26 @@ class TaskStrategy
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
         self::ACTION_ACCEPT => 'Принять',
-        self::ACTION_REFUSE => 'Отказаться'
+        // Отказаться может исполнитель задания
+        self::ACTION_REFUSE => 'Отказаться',
+        // Задание отклоняется, если автор отметил "возникли проблемы" при приемке.
+        self::ACTION_REJECT => 'Отклонить',
     ];
 
     private static $statusesWithActions = [
         self::STATUS_NEW => [self::ACTION_ANSWER, self::ACTION_CANCEL],
         self::STATUS_CANCELED => [],
-        self::STATUS_IN_WORK => [self::ACTION_ACCEPT, self::ACTION_REFUSE],
-        self::STATUS_ACCEPTED => [],
+        self::STATUS_IN_WORK => [self::ACTION_ACCEPT, self::ACTION_REFUSE, self::ACTION_REJECT],
+        self::STATUS_PERFORMED => [],
         self::STATUS_FAILED => []
     ];
 
     private static $actionsWithStatuses = [
         self::ACTION_CANCEL => self::STATUS_CANCELED,
         self::ACTION_ANSWER => self::STATUS_IN_WORK,
-        self::ACTION_ACCEPT => self::STATUS_ACCEPTED,
-        self::ACTION_REFUSE => self::STATUS_FAILED
+        self::ACTION_ACCEPT => self::STATUS_PERFORMED,
+        self::ACTION_REFUSE => self::STATUS_FAILED,
+        self::ACTION_REJECT => self::STATUS_FAILED,
     ];
 
     //id заказчика и исполнителя
@@ -91,21 +96,31 @@ class TaskStrategy
     }
 
     /**
-     * Возвращает список доступных действий.
+     * Возвращает список доступных действий для $userId
+     *
+     * @param int $userId ид пользователя, для которого проверяется доступность действий
      *
      * @return array Массив действий
      */
-    public function getAvailableActions(): array
+    public function getAvailableActions(int $userId): array
     {
         $actions = self::$statusesWithActions[$this->currentStatus];
 
         $actionObjectList = [];
         foreach ($actions as $action) {
-            $name = 'Sergei404\Actions\\' . lcfirst($action) . 'Action';
+            $name = 'Sergei404\Actions\\' . ucfirst($action) . 'Action';
             $actionObjectList[] = new $name();
         }
 
-        return $actionObjectList;
+        $actionNewObjectList = [];
+        foreach ($actionObjectList as $action) {
+            $isAvailable = $action->isAvailable($userId, $this->getIdCustomer(), $this->getIdExecutor());
+            if ($isAvailable) {
+                $actionNewObjectList[] = $action;
+            }
+        }
+
+        return $actionNewObjectList;
     }
 
     /**

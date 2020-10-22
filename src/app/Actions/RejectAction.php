@@ -3,9 +3,9 @@
 namespace Sergei404\Actions;
 
 /**
- * Класс для действия "отказаться от задачи"
+ * Класс для действия "отклик на задачу"
  */
-class RefuseAction extends Action
+class RejectAction extends Action
 {
     /**
      * {@inheritdoc}
@@ -14,7 +14,7 @@ class RefuseAction extends Action
      */
     public function getName(): string
     {
-        return 'Отказаться';
+        return 'провалено';
     }
 
     /**
@@ -24,11 +24,13 @@ class RefuseAction extends Action
      */
     public function getCode(): string
     {
-        return 'refuse';
+        return 'reject';
     }
 
     /**
-     * Отказаться может только авторизованный пользовтель, который является исполнителем.
+     * отклонить(задача переходит в статус провалено) может только авторизованный пользовтель, который является
+     * автором задачи.
+     *
      * @param integer $userId Текущий пользователь
      * @param integer $idCustomer Автор задачи
      * @param integer|null $idExecutor Исполнитель
@@ -37,6 +39,6 @@ class RefuseAction extends Action
      */
     public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
     {
-        return($userId == $idExecutor);
+        return ($userId === $idCustomer);
     }
 }

@@ -28,11 +28,11 @@ class AnswerAction extends Action
     }
 
     /**
-     * откликнуться может только авторизованный пользовтель, ноторый не является ни автором, ни исполнителем данной
+     * откликнуться может только авторизованный пользовтель, который не является ни автором, ни исполнителем данной
      * задачи.
      *
      * @param integer $userId Текущий пользователь
-     * @param integer $$idCustomer Автор задачи
+     * @param integer $idCustomer Автор задачи
      * @param integer|null $idExecutor Исполнитель
      *
      * @return boolean

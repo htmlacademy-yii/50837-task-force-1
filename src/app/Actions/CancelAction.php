@@ -27,11 +27,11 @@ class CancelAction extends Action {
     }
 
     /**
-     * отменить может только авторизованный пользовтель,
+     * отменить может задачу в статусе new только авторизованный пользовтель,
      * который является автором
      * @param integer $userId Текущий пользователь
-     * @param integer $authorId Автор задачи
-     * @param integer|null $performerId Исполнитель
+     * @param integer $idCustomer Автор задачи
+     * @param integer|null $idExecutor Исполнитель
      *
      * @return boolean
      */
