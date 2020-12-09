@@ -6,6 +6,7 @@ use Sergei404\Actions\AnswerAction;
 use Sergei404\Actions\CancelAction;
 use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
+use Sergei404\Exceptions\WrongStatus;
 
 class TaskStrategy
 {
@@ -69,7 +70,7 @@ class TaskStrategy
         if (array_key_exists($currentStatus, self::$statusesWithActions)) {
             $this->currentStatus = $currentStatus;
         } else {
-            echo "значение $currentStatus некорректно";
+            throw new \RuntimeException("значение $currentStatus некорректно");
         }
     }
 
@@ -136,6 +137,6 @@ class TaskStrategy
         if (array_key_exists($action, self::$actionsWithStatuses)) {
             return self::$actionsWithStatuses[$action];
         }
-        return '';
+        throw new \RuntimeException("значение $action некорректно");
     }
 }

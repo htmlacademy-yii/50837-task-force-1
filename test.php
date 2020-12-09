@@ -6,23 +6,25 @@ use Sergei404\Actions\AnswerAction;
 use Sergei404\Actions\CancelAction;
 use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
+use Sergei404\Exceptions\WrongStatus;
+use Sergei404\Exceptions\WrongAction;
 
 ini_set('assert.exception', 1);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $testCases = [
-    [new AnswerAction(), 11, 14, 14, true, 'Проверка на то, что не автор, не исполнитель, не могут откликнуться на задачу'],
+    [new AnswerAction(), 11, 14, 14, true, 'Проверка на то, что ни автор, ни исполнитель, не могут откликнуться на задачу'],
     [new AnswerAction(), 14, 14, 14, false, 'Проверка на то, что автор задачи не может откликнуться на задачу'],
     [new CancelAction(), 14, 14, 14, true, 'Проверка на то, данный пользователь является автором задачи'],
     [new AcceptAction(), 14, 14, 16, true, 'Проверка на то, пользовтель, который является автором задачи может выполнить действие'],
     [new RefuseAction(), 16, 14, 16, true, 'Проверка на то, что исполнитель может отказаться от задачи'],
 ];
 
-function testCaseActions($actionClass, $id1, $id2, $id3, $expected, $message)
+function testCaseActions($actionClass, $userId, $idCustomer, $idExecutor, $expected, $message)
 {
     $action = new $actionClass();
-    $isAvailable = $action->isAvailable($id1, $id2, $id3);
+    $isAvailable = $action->isAvailable($userId, $idCustomer, $idExecutor);
 
     try {
         assert($isAvailable === $expected, $message);
@@ -68,8 +70,8 @@ foreach ($expected as $expect) {
 function convertObjectToString(array $actual): array
 {
     $stringValue = [];
-    if(count($actual)) {
-        foreach($actual as $value) {
+    if (count($actual)) {
+        foreach ($actual as $value) {
             $stringValue[] = get_class($value);
         }
     }
@@ -85,3 +87,16 @@ function isArraysEqual(array $actual, array $expected): bool
     return true;
 }
 
+try {
+    $taskStrategy = new TaskStrategy(1, 5, TaskStrategy::STATUS_IN_WORK);
+} catch (WrongStatus $var) {
+    echo "Test failed: <br>", $var;
+}
+
+
+$taskStrategy2 = new TaskStrategy(1, 5, TaskStrategy::STATUS_NEW);
+try {
+    $taskStrategy2->getNextStatus('refuse');
+} catch (WrongAction $var) {
+    echo "Test failed: <br>", $var;
+}
