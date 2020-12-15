@@ -35,8 +35,10 @@ class CancelAction extends Action {
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {
-        return ($userId == $idCustomer);
+        $isAuthor = ($userId === $idCustomer);
+
+        return $role === 'customer' && $isAuthor;
     }
 }

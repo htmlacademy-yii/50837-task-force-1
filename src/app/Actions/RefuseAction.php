@@ -28,15 +28,17 @@ class RefuseAction extends Action
     }
 
     /**
-     * Отказаться может только авторизованный пользовтель, который является исполнителем.
+     * Отказаться от задачи может только авторизованный пользовтель, который является исполнителем.
      * @param integer $userId Текущий пользователь
      * @param integer $idCustomer Автор задачи
      * @param integer|null $idExecutor Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {
-        return($userId == $idExecutor);
+        $isExecutor = ($userId == $idExecutor);
+
+        return $role === 'executor' && $isExecutor;
     }
 }

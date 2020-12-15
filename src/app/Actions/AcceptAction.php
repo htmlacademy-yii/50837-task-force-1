@@ -28,15 +28,18 @@ class AcceptAction extends Action
     }
 
     /**
-     * выполнить может только авторизованный пользовтель, который является автором
+     * выполнить действие может только авторизованный пользовтель, который является автором задачи
      * @param integer $userId Текущий пользователь
      * @param integer $idCustomer Автор задачи
      * @param integer|null $idExecutor Исполнитель
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor,
+    string $role): bool
     {
-        return ($userId == $idCustomer && $userId != $idExecutor);
+        $isAuthor = ($userId == $idCustomer && $userId != $idExecutor);
+
+        return $role === 'customer' && $isAuthor;
     }
 }

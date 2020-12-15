@@ -25,5 +25,5 @@ abstract class Action
      *
      * @return bool
      */
-    abstract public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool;
+    abstract public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool;
 }

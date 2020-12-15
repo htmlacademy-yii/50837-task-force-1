@@ -37,8 +37,10 @@ class AnswerAction extends Action
      *
      * @return boolean
      */
-    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {
-        return ($userId != $idCustomer && $idExecutor != $userId);
+        $isNewExecutor = ($userId != $idCustomer && $userId != $idExecutor);
+
+        return $role === 'executor' && $isNewExecutor;
     }
 }

@@ -7,6 +7,7 @@ use Sergei404\Actions\CancelAction;
 use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
 use Sergei404\Exceptions\WrongStatus;
+use Sergei404\Exceptions\WrongAction;
 
 class TaskStrategy
 {
@@ -70,7 +71,7 @@ class TaskStrategy
         if (array_key_exists($currentStatus, self::$statusesWithActions)) {
             $this->currentStatus = $currentStatus;
         } else {
-            throw new \RuntimeException("значение $currentStatus некорректно");
+            throw new WrongStatus("значение $currentStatus некорректно");
         }
     }
 
@@ -103,7 +104,7 @@ class TaskStrategy
      *
      * @return array Массив действий
      */
-    public function getAvailableActions(int $userId): array
+    public function getAvailableActions(int $userId, string $role): array
     {
         $actions = self::$statusesWithActions[$this->currentStatus];
 
@@ -115,7 +116,7 @@ class TaskStrategy
 
         $actionNewObjectList = [];
         foreach ($actionObjectList as $action) {
-            $isAvailable = $action->isAvailable($userId, $this->getIdCustomer(), $this->getIdExecutor());
+            $isAvailable = $action->isAvailable($userId, $this->getIdCustomer(), $this->getIdExecutor(), $role);
             if ($isAvailable) {
                 $actionNewObjectList[] = $action;
             }
@@ -137,6 +138,6 @@ class TaskStrategy
         if (array_key_exists($action, self::$actionsWithStatuses)) {
             return self::$actionsWithStatuses[$action];
         }
-        throw new \RuntimeException("значение $action некорректно");
+        throw new WrongAction("значение $action некорректно");
     }
 }
