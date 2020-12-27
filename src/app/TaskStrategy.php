@@ -101,8 +101,8 @@ class TaskStrategy
      * Возвращает список доступных действий для $userId
      *
      * @param int $userId ид пользователя, для которого проверяется доступность действий
-     *
-     * @return array Массив действий
+     * @param string $role роль пользователя , для которой проверяется доступность действий
+     * @return \Sergei404\Actions\Action[] Массив действий
      */
     public function getAvailableActions(int $userId, string $role): array
     {

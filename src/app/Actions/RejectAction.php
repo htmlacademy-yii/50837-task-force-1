@@ -11,7 +11,6 @@ class RejectAction extends Action
     /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getName(): string
     {
@@ -21,7 +20,6 @@ class RejectAction extends Action
     /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getCode(): string
     {
@@ -29,13 +27,9 @@ class RejectAction extends Action
     }
 
     /**
-     * Может ли пользовтель отклонить задачу.
+     * Может ли пользовтель отклонить не принять задачу.
      *
-     * @param integer $userId Текущий пользователь
-     * @param integer $idCustomer Автор задачи
-     * @param integer|null $idExecutor Исполнитель
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {

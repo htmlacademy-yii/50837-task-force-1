@@ -2,6 +2,10 @@
 
 namespace Sergei404\Exceptions;
 
-class WrongStatus extends \Exception {
+/**
+ * При некорректно переданном статусе выкидывается исключение WrongStatus
+ */
+
+class WrongStatus extends \DomainException {
 
 }

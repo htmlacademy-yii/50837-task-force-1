@@ -9,8 +9,6 @@ class AcceptAction extends Action
 {
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -19,8 +17,6 @@ class AcceptAction extends Action
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getCode(): string
     {
@@ -28,12 +24,9 @@ class AcceptAction extends Action
     }
 
     /**
-     * выполнить действие может только авторизованный пользовтель, который является автором задачи
-     * @param integer $userId Текущий пользователь
-     * @param integer $idCustomer Автор задачи
-     * @param integer|null $idExecutor Исполнитель
+     * принять задачу может только авторизованный пользовтель, который является автором задачи и ролью - 'customer'
      *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor,
     string $role): bool

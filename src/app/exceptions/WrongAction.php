@@ -2,6 +2,11 @@
 
 namespace Sergei404\Exceptions;
 
-class WrongAction extends \Exception {
+/**
+ * При некорректно переданном действии выкидывается исключение WrongAction
+ */
+
+
+class WrongAction extends \DomainException {
 
 }

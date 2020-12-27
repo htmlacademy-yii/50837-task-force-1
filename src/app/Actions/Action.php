@@ -22,6 +22,10 @@ abstract class Action
 
     /**
      * Метод проверки прав
+     * @param integer $userId Текущий пользователь
+     * @param integer $idCustomer Автор задачи
+     * @param integer|null $idExecutor Исполнитель
+     * @param string $role роль
      *
      * @return bool
      */

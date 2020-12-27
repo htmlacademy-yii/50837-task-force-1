@@ -9,7 +9,6 @@ class CancelAction extends Action {
      /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getName(): string
     {
@@ -19,7 +18,6 @@ class CancelAction extends Action {
     /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getCode(): string
     {
@@ -28,12 +26,9 @@ class CancelAction extends Action {
 
     /**
      * отменить может задачу в статусе new только авторизованный пользовтель,
-     * который является автором
-     * @param integer $userId Текущий пользователь
-     * @param integer $idCustomer Автор задачи
-     * @param integer|null $idExecutor Исполнитель
+     * который является автором и роль - 'customer'.
      *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {
