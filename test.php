@@ -14,10 +14,10 @@ ini_set('assert.exception', 1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 $testCases = [
-    [new AnswerAction(), 11, 14, 14, 'executor', true, 'Проверка на то, откликнуться может только авторизованный пользовтель, который не является ни автором, ни исполнителем данной задачи, роль - executor'],
-    [new AnswerAction(), 14, 14, 14, 'executor', false, 'Проверка на то, откликнуться может только авторизованный пользовтель, который не является ни автором, ни исполнителем данной, роль - executor'],
-    [new CancelAction(), 14, 14, 14, 'customer', true, 'Проверка на то, отменить может задачу в статусе new только авторизованный пользовтель, который является автором и роль - customer'],
-    [new AcceptAction(), 14, 14, 16, 'customer', true, 'Проверка на то, пользовтель, который является автором задачи может выполнить определенное действие'],
+    [new AnswerAction(), 11, 14, 14, 'executor', true, 'Проверка на доступность действия - откликнутбся на задачу, роль - executor'],
+    [new AnswerAction(), 14, 14, 14, 'executor', false, 'Проверка на то, может ли откликнуться на задачу может пользовтель, роль - executor'],
+    [new CancelAction(), 14, 14, 111, 'customer', true, 'Проверка на то, что отменить может задачу в статусе new только авторизованный пользовтель, который является автором и роль - customer'],
+    [new AcceptAction(), 14, 14, 16, 'customer', true, 'Проверка на то, что пользовтель, который является автором задачи может выполнить действие -  принять задачу'],
     [new RefuseAction(), 16, 14, 16, 'executor', true, 'Проверка на то, что исполнитель может отказаться от задачи'],
 ];
 
@@ -40,12 +40,12 @@ foreach ($testCases as $testCase) {
 // =======================================================================================================
 
 $expected = [
-    [['Sergei404\Actions\AnswerAction'], 22, 2, 4, 'executor', 'new', 'Задача в статусе new, откликнутся на задачу может user который не является ни автором задачи, роль пользователя - executor, доступное действие взять в работу'],
-    [['Sergei404\Actions\CancelAction'], 21, 2, 21, 'customer', 'new', 'Задача в статусе new, автор задачи может ее отменить, роль пользователя - customer, доступное действие взять отменить'],
-    [['Sergei404\Actions\RefuseAction'], 2, 21, 21, 'executor', 'in work', 'Задача в статусе in work, исполнитель может отказаться от задания, роль пользователя - executor, доступное действие отказаться'],
-    [['Sergei404\Actions\AcceptAction', 'Sergei404\Actions\RejectAction'], 2, 21, 2, 'customer', 'in work', 'Задача в статусе in work, автор задачи может принять задачу или отклонить ее, роль пользователя - customer, доступные действия принять или отклонить'],
-    [[], 2, 11, 11, 'executor', 'performed', 'Задача в статусе performed, роль пользователя исполнитель - нет доступных действий'],
-    [[], 2, 2, 11, 'customer', 'performed', 'Задача в статусе performed, роль пользователя автор - нет доступных действий'],
+    [['Sergei404\Actions\AnswerAction'], 22, 2, 4, 'executor', 'new', 'Статус задачи: new(новая); Роль пользователя на сайте: исполнитель; Роль пользователя в рамках задачи: не участник (не автор и не исполнитель); Доступны действия: Откликнуться.'],
+    [['Sergei404\Actions\CancelAction'], 21, 2, 21, 'customer', 'new', 'Статус задачи: new(новая); Роль пользователя на сайте: customer(автор); Доступны действия: Отменить'],
+    [['Sergei404\Actions\RefuseAction'], 2, 21, 21, 'executor', 'in work', 'Статус задачи: in work(в работе); Роль пользователя на сайте: executor(исполнитель); Доступны действия: Отказаться'],
+    [['Sergei404\Actions\AcceptAction', 'Sergei404\Actions\RejectAction'], 2, 21, 2, 'customer', 'in work', 'Статус задачи: in work(в работе); Роль пользователя на сайте: customer(автор); Доступны действия: Принять или Отклонить'],
+    [[], 2, 11, 11, 'executor', 'performed', 'Статус задачи: performed(выполнена); Роль пользователя на сайте: executor(исполнитель); Доступны действия: Нет доступных действий'],
+    [[], 2, 2, 11, 'customer', 'performed', 'Статус задачи: performed(выполнена);  Роль пользователя на сайте: customer(автор); Доступны действия: Нет доступных действий'],
 ];
 
 
@@ -56,7 +56,7 @@ function testAvailableActions($expect, $idCustomer, $idExecutor, $userId, $role,
     $availableActions = $taskStrategy->getAvailableActions($userId, $role);
 
     try {
-        assert(isArraysEqual($availableActions, $expect), $message);
+        assert(getClassNames($availableActions) == $expect, $message);
     } catch (\AssertionError $th) {
         echo ("Test failed: {$th->getMessage()} \n");
     }
@@ -83,14 +83,6 @@ function getClassNames(array $objects): array
         }
     }
     return $names;
-}
-
-function isArraysEqual(array $actual, array $expected): bool
-{
-    if (getClassNames($actual) !== $expected) {
-        return false;
-    }
-    return true;
 }
 
 /**

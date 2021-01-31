@@ -22,12 +22,8 @@ abstract class Action
 
     /**
      * Метод проверки прав
-     * @param integer $userId Текущий пользователь
-     * @param integer $idCustomer Автор задачи
-     * @param integer|null $idExecutor Исполнитель
-     * @param string $role роль
-     *
-     * @return bool
+     * 
+     * {@inheritdoc}
      */
     abstract public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool;
 }
