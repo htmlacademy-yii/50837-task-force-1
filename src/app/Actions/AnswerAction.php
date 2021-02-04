@@ -10,7 +10,6 @@ class AnswerAction extends Action
     /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getName(): string
     {
@@ -20,7 +19,6 @@ class AnswerAction extends Action
     /**
      * {@inheritdoc}
      *
-     * @return string
      */
     public function getCode(): string
     {
@@ -29,16 +27,14 @@ class AnswerAction extends Action
 
     /**
      * откликнуться может только авторизованный пользовтель, который не является ни автором, ни исполнителем данной
-     * задачи.
+     * задачи, роль - 'executor'.
      *
-     * @param integer $userId Текущий пользователь
-     * @param integer $idCustomer Автор задачи
-     * @param integer|null $idExecutor Исполнитель
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool
+    public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool
     {
-        return ($userId != $idCustomer && $idExecutor != $userId);
+        $isNewExecutor = ($userId != $idCustomer && $userId != $idExecutor);
+
+        return $role === 'executor' && $isNewExecutor;
     }
 }

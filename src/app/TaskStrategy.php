@@ -6,6 +6,8 @@ use Sergei404\Actions\AnswerAction;
 use Sergei404\Actions\CancelAction;
 use Sergei404\Actions\AcceptAction;
 use Sergei404\Actions\RefuseAction;
+use Sergei404\Exceptions\WrongStatus;
+use Sergei404\Exceptions\WrongAction;
 
 class TaskStrategy
 {
@@ -69,7 +71,7 @@ class TaskStrategy
         if (array_key_exists($currentStatus, self::$statusesWithActions)) {
             $this->currentStatus = $currentStatus;
         } else {
-            echo "значение $currentStatus некорректно";
+            throw new WrongStatus("значение $currentStatus некорректно");
         }
     }
 
@@ -99,10 +101,10 @@ class TaskStrategy
      * Возвращает список доступных действий для $userId
      *
      * @param int $userId ид пользователя, для которого проверяется доступность действий
-     *
-     * @return array Массив действий
+     * @param string $role роль пользователя , для которой проверяется доступность действий
+     * @return \Sergei404\Actions\Action[] Массив действий
      */
-    public function getAvailableActions(int $userId): array
+    public function getAvailableActions(int $userId, string $role): array
     {
         $actions = self::$statusesWithActions[$this->currentStatus];
 
@@ -114,7 +116,7 @@ class TaskStrategy
 
         $actionNewObjectList = [];
         foreach ($actionObjectList as $action) {
-            $isAvailable = $action->isAvailable($userId, $this->getIdCustomer(), $this->getIdExecutor());
+            $isAvailable = $action->isAvailable($userId, $this->getIdCustomer(), $this->getIdExecutor(), $role);
             if ($isAvailable) {
                 $actionNewObjectList[] = $action;
             }
@@ -136,6 +138,6 @@ class TaskStrategy
         if (array_key_exists($action, self::$actionsWithStatuses)) {
             return self::$actionsWithStatuses[$action];
         }
-        return '';
+        throw new WrongAction("значение $action некорректно");
     }
 }

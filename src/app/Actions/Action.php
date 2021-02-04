@@ -22,8 +22,8 @@ abstract class Action
 
     /**
      * Метод проверки прав
-     *
-     * @return bool
+     * 
+     * {@inheritdoc}
      */
-    abstract public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor): bool;
+    abstract public function isAvailable(int $userId, int $idCustomer, ?int $idExecutor, string $role): bool;
 }
