@@ -36,6 +36,11 @@
             "enabled": false
         }
     },
+    "autoload": {
+      "psr-4": {
+        "Sergei404\\": "src/app"
+      }
+    },
     "repositories": [
         {
             "type": "composer",
