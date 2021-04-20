@@ -57,15 +57,15 @@ CREATE TABLE profiles (
   phone VARCHAR (70) UNIQUE,
   skype VARCHAR (129) UNIQUE,
   user_id INT UNSIGNED NOT NULL,
+  telegram VARCHAR (129) UNIQUE,
+  notify_of_messages BOOLEAN,
+  notify_of_actions BOOLEAN,
+  notify_of_responses BOOLEAN,
+  show_contacts BOOLEAN,
+  show_profile BOOLEAN,
   FOREIGN KEY (user_id) REFERENCES users (id)
   ON DELETE CASCADE
   ON UPDATE CASCADE
-  -- telegram VARCHAR (129) UNIQUE,
-  -- notify_of_messages BOOLEAN,
-  -- notify_of_actions BOOLEAN,
-  -- notify_of_responses BOOLEAN,
-  -- show_contacts BOOLEAN,
-  -- show_profile BOOLEAN,
 );
 
 CREATE TABLE opinions (
@@ -92,39 +92,39 @@ CREATE TABLE replies (
   ON UPDATE CASCADE
 );
 
--- CREATE TABLE job_photos (
---   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
---   user_id INT UNSIGNED,
---   photo VARCHAR (256),
---   FOREIGN KEY (user_id) REFERENCES users (id)
---   ON DELETE CASCADE
---   ON UPDATE CASCADE
--- );
+CREATE TABLE job_photos (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  user_id INT UNSIGNED,
+  photo VARCHAR (256),
+  FOREIGN KEY (user_id) REFERENCES users (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
 
--- CREATE TABLE users_categories (
---   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
---   user_id INT UNSIGNED,
---   category_id INT UNSIGNED,
---   FOREIGN KEY (user_id) REFERENCES users (id),
---   FOREIGN KEY (category_id) REFERENCES categories (id)
---   ON DELETE CASCADE
---   ON UPDATE CASCADE
--- );
+CREATE TABLE users_categories (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  user_id INT UNSIGNED,
+  category_id INT UNSIGNED,
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (category_id) REFERENCES categories (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
 
--- CREATE TABLE files (
---   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
---   task_id INT UNSIGNED,
---   `path` VARCHAR (256),
---   FOREIGN KEY (task_id) REFERENCES tasks (id)
---   ON DELETE CASCADE
---   ON UPDATE CASCADE
--- );
+CREATE TABLE files (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  task_id INT UNSIGNED,
+  `path` VARCHAR (256),
+  FOREIGN KEY (task_id) REFERENCES tasks (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
 
--- CREATE TABLE messages (
---   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
---   author_id INT UNSIGNED,
---   `text` VARCHAR (512),
---   FOREIGN KEY (author_id) REFERENCES users (id)
---   ON DELETE CASCADE
---   ON UPDATE CASCADE
--- );
+CREATE TABLE messages (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  author_id INT UNSIGNED,
+  `text` VARCHAR (512),
+  FOREIGN KEY (author_id) REFERENCES users (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
